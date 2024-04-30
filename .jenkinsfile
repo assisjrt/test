@@ -3,8 +3,10 @@ pipeline {
 
     stages {
         stage('Information') {
-            echo env.BRANCH_NAME
-            echo env.TAG_NAME
+            steps {
+                echo env.BRANCH_NAME
+                echo env.TAG_NAME
+            }
         }
 
         stage('SAST') {
