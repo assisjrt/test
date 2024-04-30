@@ -17,7 +17,7 @@ pipeline {
                 }
             }
 
-            stages {
+            parallel {
                 stage('gosec') {
                     steps {
                         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
@@ -29,18 +29,16 @@ pipeline {
                             }
                         }
                     }
-                }
 
-                post {
-                    always {
-                        junit testResults: '**/build/test-reports/*.xml', allowEmptyResults: false
+                    post {
+                        always {
+                            junit testResults: '**/build/test-reports/*.xml', allowEmptyResults: false
+                        }
                     }
                 }
-            }
 
-            stages {
                 stage('bandit') {
-                    step {
+                    steps {
                         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                             container('bandit') {
                                 sh """
@@ -50,36 +48,15 @@ pipeline {
                             }
                         }
                     }
-                }
 
-                post {
-                    always {
-                        junit testResults: '**/build/test-reports/*.xml', allowEmptyResults: false
+
+                    post {
+                        always {
+                            junit testResults: '**/build/test-reports/*.xml', allowEmptyResults: false
+                        }
                     }
                 }
             }
-
-            // stages {
-            //     stage('flake8') {
-            //         step {
-            //             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-            //                 container('flake8') {
-            //                     sh """
-            //                         mkdir -p ./build/test-reports
-            //                         flake8 --format=default --output-file=./build/test-reports/flake8-report.txt
-            //                     """
-            //                 }
-            //             }
-            //         }
-            //     }
-
-            //     post {
-            //         always {
-            //             sh 'flake8_junit /build/test-reports/flake8-report.txt ./build/test-reports/flake8-report.xml'
-            //             junit testResults: '**/build/test-reports/*.xml', allowEmptyResults: false
-            //         }
-            //     }
-            // }
         }
 
         stage('Build') {
