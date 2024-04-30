@@ -5,8 +5,8 @@ pipeline {
         stage('SAST') {
             when {
                 anyOf {
-                    branch pattern: '^(main|staging|develop)$', comparator: 'REGEXP'
-                    tag pattern: '^(v\d+\.\d+\.\d+$|v\d+\.\d+\.\d+-staging)$', comparator: 'REGEXP'
+                    branch pattern: '/^(main|staging|develop)$/', comparator: 'REGEXP'
+                    tag pattern: '/^(v\d+\.\d+\.\d+$|v\d+\.\d+\.\d+-staging)$/', comparator: 'REGEXP'
                 }
             }
 
