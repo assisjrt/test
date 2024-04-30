@@ -6,7 +6,6 @@ pipeline {
             steps {
                 echo env.BRANCH_NAME
                 echo env.TAG_NAME
-                echo sh(script: 'env|sort', returnStdout: true)
             }
         }
 
