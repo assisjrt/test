@@ -2,15 +2,23 @@ pipeline {
     agent { label "jenkins-agent" }
 
     stages {
+        stage('Information') {
+            echo env.BRANCH_NAME
+            echo env.TAG_NAME
+        }
+
         stage('SAST') {
             when {
-                branch pattern: '^(main|staging|develop)$', comparator: 'REGEXP'
-                tag pattern: '/^(v\d+\.\d+\.\d+$|v\d+\.\d+\.\d+-staging)$/', comparator: 'REGEXP'
+                anyOf {
+                    branch 'main';
+                    branch 'staging';
+                    branch 'develop';
+                    expression { env.TAG_NAME ==~ /^v\d+\.\d+\.\d+$/ }
+                    expression { env.TAG_NAME ==~ /^v\d+\.\d+\.\d+-staging$/ }
+                }
             }
 
             steps {
-                echo env.BRANCH_NAME
-                echo env.TAG_NAME
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     echo "SAST..."
                     container('gosec') {
