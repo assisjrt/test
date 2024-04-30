@@ -5,8 +5,8 @@ pipeline {
         stage('SAST') {
             when {
                 anyOf {
-                    expression { env.BRANCH_NAME ==~ /^(main|staging|develop)$/ };
-                    expression { env.TAG_NAME ==~ /^(v\d+\.\d+\.\d+$|v\d+\.\d+\.\d+-staging)$/ };
+                    expression { env.BRANCH_NAME =~ /^(main|staging|develop)$/ };
+                    expression { env.TAG_NAME =~ /^(v\d+\.\d+\.\d+$|v\d+\.\d+\.\d+-staging)$/ };
                 }
             }
 
