@@ -12,11 +12,8 @@ pipeline {
         stage('SAST') {
             when {
                 anyOf {
-                    branch 'main';
-                    branch 'staging';
-                    branch 'develop';
-                    expression { env.TAG_NAME ==~ /^v\d+\.\d+\.\d+$/ }
-                    expression { env.TAG_NAME ==~ /^v\d+\.\d+\.\d+-staging$/ }
+                    expression { env.BRANCH_NAME ==~ /^(main|staging|develop)$/ }
+                    expression { env.TAG_NAME ==~ /^(v\d+\.\d+\.\d+$|v\d+\.\d+\.\d+-staging$)/ }
                 }
             }
 
@@ -42,11 +39,8 @@ pipeline {
         stage('Build') {
             when {
                 anyOf {
-                    branch 'main';
-                    branch 'staging';
-                    branch 'develop';
-                    expression { env.TAG_NAME ==~ /^v\d+\.\d+\.\d+$/ }
-                    expression { env.TAG_NAME ==~ /^v\d+\.\d+\.\d+-staging$/ }
+                    expression { env.BRANCH_NAME ==~ /^(main|staging|develop)$/ }
+                    expression { env.TAG_NAME ==~ /^(v\d+\.\d+\.\d+$|v\d+\.\d+\.\d+-staging$)/ }
                 }
             }
 
@@ -58,11 +52,8 @@ pipeline {
         stage('Test') {
             when {
                 anyOf {
-                    branch 'main';
-                    branch 'staging';
-                    branch 'develop';
-                    expression { env.TAG_NAME ==~ /^v\d+\.\d+\.\d+$/ }
-                    expression { env.TAG_NAME ==~ /^v\d+\.\d+\.\d+-staging$/ }
+                    expression { env.BRANCH_NAME ==~ /^(main|staging|develop)$/ }
+                    expression { env.TAG_NAME ==~ /^(v\d+\.\d+\.\d+$|v\d+\.\d+\.\d+-staging$)/ }
                 }
             }
 
@@ -74,11 +65,8 @@ pipeline {
         stage('Deploy') {
             when {
                 anyOf {
-                    branch 'main';
-                    branch 'staging';
-                    branch 'develop';
-                    expression { env.TAG_NAME ==~ /^v\d+\.\d+\.\d+$/ }
-                    expression { env.TAG_NAME ==~ /^v\d+\.\d+\.\d+-staging$/ }
+                    expression { env.BRANCH_NAME ==~ /^(main|staging|develop)$/ }
+                    expression { env.TAG_NAME ==~ /^(v\d+\.\d+\.\d+$|v\d+\.\d+\.\d+-staging$)/ }
                 }
             }
 
