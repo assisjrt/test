@@ -17,14 +17,17 @@ pipeline {
                 }
             }
 
-            steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    echo "SAST..."
-                    container('gosec') {
-                        sh """
-                            mkdir -p ./build/test-reports
-                            gosec -r -fmt junit-xml -out ./build/test-reports/gosec-report.xml .
-                        """
+            stages {
+                stage('gosec') {
+                    steps {
+                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                            container('gosec') {
+                                sh """
+                                    mkdir -p ./build/test-reports
+                                    gosec -r -fmt junit-xml -out ./build/test-reports/gosec-report.xml .
+                                """
+                            }
+                        }
                     }
                 }
 
@@ -35,6 +38,48 @@ pipeline {
                 }
             }
 
+            stages {
+                stage('bandit') {
+                    step {
+                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                            container('bandit') {
+                                sh """
+                                    mkdir -p ./build/test-reports
+                                    bandit --format=xml --recursive --output=./build/test-reports/bandit-report.xml .
+                                """
+                            }
+                        }
+                    }
+                }
+
+                post {
+                    always {
+                        junit testResults: '**/build/test-reports/*.xml', allowEmptyResults: false
+                    }
+                }
+            }
+
+            // stages {
+            //     stage('flake8') {
+            //         step {
+            //             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+            //                 container('flake8') {
+            //                     sh """
+            //                         mkdir -p ./build/test-reports
+            //                         flake8 --format=default --output-file=./build/test-reports/flake8-report.txt
+            //                     """
+            //                 }
+            //             }
+            //         }
+            //     }
+
+            //     post {
+            //         always {
+            //             sh 'flake8_junit /build/test-reports/flake8-report.txt ./build/test-reports/flake8-report.xml'
+            //             junit testResults: '**/build/test-reports/*.xml', allowEmptyResults: false
+            //         }
+            //     }
+            // }
         }
 
         stage('Build') {
