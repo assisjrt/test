@@ -27,13 +27,14 @@ pipeline {
                         """
                     }
                 }
-            }
 
-            post {
-                always {
-                    junit testResults: '**/build/test-reports/*.xml', allowEmptyResults: false
+                post {
+                    always {
+                        junit testResults: '**/build/test-reports/*.xml', allowEmptyResults: false
+                    }
                 }
             }
+
         }
 
         stage('Build') {
