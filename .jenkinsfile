@@ -8,8 +8,8 @@ pipeline {
                     branch 'main';
                     branch 'staging';
                     branch 'develop';
-                    expression { env.TAG_NAME == '^v\d+\.\d+\.\d+$' }
-                    expression { env.TAG_NAME == '^v\d+\.\d+\.\d+-staging$' }
+                    expression { env.TAG_NAME ==~ '^v\d+\.\d+\.\d+$' }
+                    expression { env.TAG_NAME ==~ '^v\d+\.\d+\.\d+-staging$' }
                 }
             }
 
