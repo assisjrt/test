@@ -2,25 +2,16 @@ pipeline {
     agent any
 
     stages {
-        when {
-            anyOf {
-                branch 'main';
-                branch 'staging';
-                branch 'develop';
-                expression { env.TAG_NAME ==~ /^v\d+\.\d+\.\d+$/ }
-                expression { env.TAG_NAME ==~ /^v\d+\.\d+\.\d+-staging$/ }
-            }
-        }
         stage('SAST') {
-            // when {
-            //     anyOf {
-            //         branch 'main';
-            //         branch 'staging';
-            //         branch 'develop';
-            //         expression { env.TAG_NAME ==~ /^v\d+\.\d+\.\d+$/ }
-            //         expression { env.TAG_NAME ==~ /^v\d+\.\d+\.\d+-staging$/ }
-            //     }
-            // }
+            when {
+                anyOf {
+                    branch 'main';
+                    branch 'staging';
+                    branch 'develop';
+                    expression { env.TAG_NAME ==~ /^v\d+\.\d+\.\d+$/ }
+                    expression { env.TAG_NAME ==~ /^v\d+\.\d+\.\d+-staging$/ }
+                }
+            }
 
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
@@ -42,18 +33,48 @@ pipeline {
         }
 
         stage('Build') {
+            when {
+                anyOf {
+                    branch 'main';
+                    branch 'staging';
+                    branch 'develop';
+                    expression { env.TAG_NAME ==~ /^v\d+\.\d+\.\d+$/ }
+                    expression { env.TAG_NAME ==~ /^v\d+\.\d+\.\d+-staging$/ }
+                }
+            }
+
             steps {
                 echo "Building.."
             }
         }
 
         stage('Test') {
+            when {
+                anyOf {
+                    branch 'main';
+                    branch 'staging';
+                    branch 'develop';
+                    expression { env.TAG_NAME ==~ /^v\d+\.\d+\.\d+$/ }
+                    expression { env.TAG_NAME ==~ /^v\d+\.\d+\.\d+-staging$/ }
+                }
+            }
+
             steps {
                 echo "Testing..."
             }
         }
 
         stage('Deploy') {
+            when {
+                anyOf {
+                    branch 'main';
+                    branch 'staging';
+                    branch 'develop';
+                    expression { env.TAG_NAME ==~ /^v\d+\.\d+\.\d+$/ }
+                    expression { env.TAG_NAME ==~ /^v\d+\.\d+\.\d+-staging$/ }
+                }
+            }
+
             steps {
                 echo "Deploying...."
             }
